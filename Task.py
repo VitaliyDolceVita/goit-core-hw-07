@@ -18,43 +18,6 @@ class Record:
         self.birthday = Birthday(value)
 
 
-def main():
-    book = AddressBook()
-    print("Welcome to the assistant bot!")
-    while True:
-        user_input = input("Enter a command: ")
-        command, *args = parse_input(user_input)
-
-        if command in ["close", "exit"]:
-            print("Good bye!")
-            break
-
-        elif command == "hello":
-            print("How can I help you?")
-
-        elif command == "add":
-            # реалізація
-
-        elif command == "change":
-            # реалізація
-
-        elif command == "phone":
-            # реалізація
-
-        elif command == "all":
-            # реалізація
-
-        elif command == "add-birthday":
-            # реалізація
-
-        elif command == "show-birthday":
-            # реалізація
-
-        elif command == "birthdays":
-            # реалізація
-
-        else:
-            print("Invalid command.")
 
 
 # Декоратор для обробки помилок введення користувача
@@ -71,8 +34,15 @@ def input_error(func):
     return inner
 
 
+
 @input_error
 def parse_input(command):
+    parts = command.split()
+    return parts[0] 
+
+        
+@input_error
+def parse_input1(command):
     # Перетворюємо введену команду у нижній регістр для зручності порівняння.
     parts = command.split()
     # Перевіряємо, яка команда була введена та викликаємо відповідну функцію.
@@ -126,15 +96,56 @@ def show_all():
     else:
         return "No contacts found."
 
+def main():
+    book = AddressBook()
+    print("Welcome to the assistant bot!")
+    while True:
+        user_input = input("Enter a command: ")
+        command, *args = parse_input(user_input)
+
+        if command in ["close", "exit"]:
+            print("Good bye!")
+            break
+
+        elif command == "hello":
+            print("How can I help you?")
+
+        elif command == "add" and len(parts) == 3:
+            if parts[2].isdigit(): 
+                return add_contact(parts[1], parts[2])
+            else:   # Якщо телефон не є цифрами
+                return "Phone number is not digit."  # Повідомляємо користувача 
+
+        elif command == "change" and len(parts) == 3:
+        return change_contact(parts[1], parts[2])
+
+        elif command == "phone":
+            # реалізація
+
+        elif command == "all":
+            # реалізація
+
+        elif command == "add-birthday":
+            # реалізація
+
+        elif command == "show-birthday":
+            # реалізація
+
+        elif command == "birthdays":
+            # реалізація
+
+        else:
+            print("Invalid command.")
 
 # Основна функція для управління основним циклом обробки команд.
 def main():
-    contacts = {}  #  створюємо порожній словник для зберігання контактів
+    # contacts = {}  #  створюємо порожній словник для зберігання контактів
+    print("Welcome to the assistant bot!")
     while True:
         # Зчитуємо введену користувачем команду.
         command = input("Enter command: ")
         # Розбираємо введену команду та отримуємо відповідь.
-        response = parse_input(command)
+        response = parse_input1(command)
         # Виводимо відповідь користувачеві.
         print(response)
         # Якщо користувач ввів "exit" або "close", завершуємо виконання програми.
