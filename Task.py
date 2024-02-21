@@ -204,7 +204,6 @@ def main():
             for record in book.data.values():
                 if record.birthday:
                     users.append({"name": record.name.value, "birthday": record.birthday.date.strftime("%Y.%m.%d")})
-
             upcoming_birthdays = get_upcoming_birthdays(users)
             print("Список привітань на цьому тижні:", upcoming_birthdays)
         else:
