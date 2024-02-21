@@ -4,24 +4,18 @@ from datetime import datetime, timedelta
 def get_upcoming_birthdays(users):
     # Поточна дата
     today = datetime.today().date()
-
     # Список для зберігання дат привітань
     upcoming_birthdays = []
-
     for user in users:
         # Конвертуємо дату народження з рядка у об'єкт datetime
         birthday = datetime.strptime(user["birthday"], "%Y.%m.%d").date()
-
         # Визначаємо дату народження в цьому році
         birthday_this_year = birthday.replace(year=today.year)
-
         # Якщо день народження вже пройшов у цьому році, розглядаємо дату на наступний рік
         if birthday_this_year < today:
             birthday_this_year = birthday_this_year.replace(year=today.year + 1)
-
         # Різниця між днем народження та поточною датою
         diff = (birthday_this_year - today).days
-
         # Перевіряємо, чи день народження випадає протягом наступного тижня
         if 0 <= diff <= 7:
             # Якщо день народження припадає на вихідний, переносимо його на наступний понеділок
@@ -31,7 +25,6 @@ def get_upcoming_birthdays(users):
             # Додаємо ім'я та дату привітання до списку
             upcoming_birthdays.append(
                 {"name": user["name"], "congratulation_date": birthday_this_year.strftime("%Y.%m.%d")})
-
     return upcoming_birthdays
 
 
@@ -42,15 +35,9 @@ class Field:  # Створюємо клас Field
     def __str__(self):  # Оголошення методу для конвертації об'єкта в рядок
         return str(self.value)
 
-
 class Name:
     def __init__(self, value):
         self.value = value
-
-# class Name(Field):  # Створюєм клас Name який наслідує клас  Field
-#     def __init__(self, name):
-#         self.name = name
-
 
 class Phone(Field):  # Створюєм клас Name який наслідує клас  Field
     def __init__(self, value):  # Оголошення конструктора класу з аргументом value
@@ -81,6 +68,15 @@ class Record:  # Оголошення класу Record
     # @input_error
     def add_birthday(self, value):
         self.birthday = Birthday(value)
+
+    def show_birthday(self):
+        if self.birthday:
+            return f"{self.name.value}'s birthday is on {self.birthday.date.strftime('%d.%m.%Y')}"
+        else:
+            return f"{self.name.value} has no birthday set"
+
+
+    # def show_birthday(self, value):
 
     def add_phone(self, phone):  # Оголошення методу для додавання телефону до запису
         self.phones.append(Phone(phone))  # Додавання нового телефону до списку телефонів запису
@@ -118,29 +114,6 @@ class AddressBook(UserDict):  # Оголошення класу AddressBook, щ�
 
     def __str__(self):  # Оголошення методу для конвертації об'єкту в рядок
         return "\n".join(str(record) for record in self.data.values())  # Повертає рядок, складений з рядків, які представляють кожен запис у словнику адресної книги
-
-
-
-
-# @input_error
-# def add_birthday(args, book):
-#     # реалізація
-#
-# @input_error
-# def show_birthday(args, book):
-#     # реалізація
-#
-# @input_error
-# def birthdays(args, book):
-#     # реалізація
-# class Record:
-#     def __init__(self, name):
-#         self.name = Name(name)
-#         self.phones = []
-#         self.birthday = None
-#
-#     def add_birthday(self, value):
-#         self.birthday = Birthday(value)
 
 
 # Декоратор для обробки помилок введення користувача
@@ -192,7 +165,6 @@ def main():
                 user_record.add_phone(phone)
                 book.add_record(user_record)
                 print("Record added successfully!")
-
         elif command == "change":
             name = args[0]
             new_phone = args[1]
@@ -211,7 +183,8 @@ def main():
             for name, record in book.data.items():
                 print(record)
              # print(book)
-        #
+        elif command == "book":
+            print(book)
         elif command == "add-birthday":
             name = args[0]
             new_birthday = args[1]
@@ -219,19 +192,21 @@ def main():
             user_record.add_birthday(new_birthday)
             book.add_record(user_record)
             print("Birthday added successfully!")
-        #
-        # elif command == "show-birthday":
-        #     # реалізація
-        #
+        elif command == "show-birthday":
+            name = args[0]
+            found_record = book.find(name)
+            if found_record:
+                print(found_record.show_birthday())
+            else:
+                print(f"No record found for {name}.")
         elif command == "birthdays":
-            users = [
-            {"name": "John Doe", "birthday": "1985.02.23"},
-            {"name": "Jane Smith", "birthday": "1990.01.27"}
-             ]
+            users = []
+            for record in book.data.values():
+                if record.birthday:
+                    users.append({"name": record.name.value, "birthday": record.birthday.date.strftime("%Y.%m.%d")})
 
             upcoming_birthdays = get_upcoming_birthdays(users)
             print("Список привітань на цьому тижні:", upcoming_birthdays)
-
         else:
             print("Invalid command.")
 
