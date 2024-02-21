@@ -43,12 +43,10 @@ class Phone(Field):  # Створюєм клас Name який наслідує 
     def __init__(self, value):  # Оголошення конструктора класу з аргументом value
         super().__init__(value)  # Виклик конструктора батьківського класу Field з передачею значення value
         if not self.is_valid():
-            raise ValueError(
-                "Invalid phone number format. Please provide a 10-digit phone number.")  # виклик винятку, якщо номер телефону некоректний
+            raise ValueError("Invalid phone number format. Please provide a 10-digit phone number.")  # виклик винятку, якщо номер телефону некоректний
 
     def is_valid(self):  # Оголошення методу для перевірки валідності номера телефону
-        return len(
-            self.value) == 10 and self.value.isdigit()  # Повертає True, якщо довжина номера телефону дорівнює 10 і всі символи є цифрами, інакше повертає False
+        return len(self.value) == 10 and self.value.isdigit()  # Повертає True, якщо довжина номера телефону дорівнює 10 і всі символи є цифрами, інакше повертає False
 
 
 class Birthday:
